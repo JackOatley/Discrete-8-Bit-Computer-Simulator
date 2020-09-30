@@ -1,0 +1,113 @@
+body {
+	background: #404050;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	align-content: stretch;
+	margin: 0px;
+	height: 100%;
+	color: white;
+	font-family: monospace;
+}
+
+textarea {
+	border-width: 0px 1px 0px 0px;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+    -moz-box-shadow: none;
+	outline: none;
+}
+
+.flex {
+	display: flex;
+}
+
+#menubar, #examples {
+	background: #222233;
+	min-height: 24px;
+	padding: 4px;
+}
+
+#examples {
+	background: #303040;
+}
+
+#statusbar {
+	background: #222233;
+	min-height: 24px;
+}
+
+#middle {
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
+
+#editor {
+	background: #404050;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+}
+
+#reference {
+	height: 200px;
+	border: 1px solid rgb(110, 110, 110);
+	border-width: 1px 1px 0px 0px;
+	padding: 10px;
+	overflow-y: scroll;
+}
+#reference p {
+	margin: 4px;
+}
+
+#editorBox {
+	background: #404050;
+	display: flex;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+}
+
+#codearea {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	resize: none;
+}
+
+#code {
+	background: #404050;
+	color: #dadada;
+	width: 50%;
+	height: 100%;
+	resize: none;
+	margin-left: 10px;
+	flex-grow: 1;
+}
+#numbers {
+	border: 0px;
+	background: #3c3c4c;
+	color: #dadada;
+	width: 24px;
+	height: 100%;
+	resize: none;
+	overflow: hidden;
+	text-align: right;
+}
+
+#binary, #hex, #octal {
+	color: #999999;
+	background: #303040;
+	width: 10%;
+	height: 100%;
+	resize: none;
+}
+
+#display {
+	width: 780px;
+	height: 100%;
+	flex-grow: 0;
+	flex-shrink: 0;
+}

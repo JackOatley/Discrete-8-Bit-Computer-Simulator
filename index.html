@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<link rel='stylesheet' href='style.css'>
+	</head>
+	<body>
+		<div id='menubar'>
+			<button onclick='runProgram()' title='Run program'>Run</button>
+			<button onclick='resetProgram()' title='Reset program counter (does not reload program, meaning changes to RAM will remain)'>Reset</button>
+			<button onclick='togglePause()' title='Pause or resume program'>Pause/Resume</button>
+			<span id='clockNumber'>Clock Speed: 8</span>
+			<input type="range" min=1 max=100 value=8 class="slider" id="clockSlider">
+		</div>
+		<div id='middle'>
+			<div id='editorBox'>
+				<div id='examples'>
+					<button onclick='loadExample("Addition")'>Addition</button>
+					<button onclick='loadExample("Subtraction")'>Subtraction</button>
+					<button onclick='loadExample("Multiplication")'>Multiplication</button>
+					<button onclick='loadExample("Counting")'>Counting</button>
+					<button onclick='loadExample("Fibonacci 1")'>Fibonacci 1</button>
+					<button onclick='loadExample("Fibonacci 2")'>Fibonacci 2</button>
+					<button onclick='loadExample("Fill RAM")'>Fill RAM</button>
+				</div>
+				<div id='editor'>
+					<div id='codearea'>
+						<textarea id='numbers' readonly></textarea>
+						<textarea id='code'></textarea>
+						<textarea id='binary' readonly></textarea>
+						<textarea id='octal' readonly></textarea>
+						<textarea id='hex' readonly></textarea>
+					</div>
+					<div id='reference'>
+						<h4>Reference</h4>
+						<p><b>NOP</b> - No operation, continues to next instruction.</p>
+						<p><b>HLT</b> - Halt, but no catching fire.</p>
+						<p><b>SEA [value]</b> - Set A, sets the value of Register A to the given value.</p>
+						<p><b>SEB [value]</b> - Set B, sets the value of Register B to the given value.</p>
+						<p><b>LDA [address]</b> - Load A, loads the value at the address into Register A.</p>
+						<p><b>STA [address]</b> - Store A, stores the value of Register A to the given memory address.</p>
+						<p><b>STB [address]</b> - Store B, stores the value of Register B to the given memory address.</p>
+						<p><b>ADD [address]</b> - Add, add the value at the given memory address to the value in Register A.</p>
+						<p><b>SUB [address]</b> - Subtract, subtract the value at the given memory address from the value in Register A.</p>
+						<p><b>ADR</b> - Add Directly, adds the values in registers A and B together.</p>
+						<p><b>SBR</b> - Subtract Directly, subtracts the value in register B from the value in register A.</p>
+						<p><b>JMP [address]</b> - Jump, jumps to the given memory address.</p>
+						<p><b>JLT [address]</b> - Jump If Less Than, jumps to the given memory address if Register A value < Register B value.</p>
+						<p><b>JIZ [address]</b> - Jump If Zero, jumps to the given memory address if Register A value is 0.</p>
+						<p><b>SWP</b> - Swap, swaps the values of registers A and B.</p>
+						<p><b>OUT</b> - Output, puts the value of Register A into the Display Register.</p>
+						<h4>Notes</h4>
+						<p>This is a very early version of the intended program, and has only had a couple days where I worked on it. As such the code has not been refactored, and a lot of features are missing. Future features will include: labels (will make dealing with memory addresses a lot easier), instruction cycle simulated (so you can see the control word and it's effects), comments, syntax highlighting, error reporting, logs of changes in hardware per run, and loads more stuff!</p>
+					</div>
+				</div>
+			</div>
+			<div id='display'>
+				<canvas id='canvas'></canvas>
+			</div>
+		</div>
+		<div id='statusbar'>
+		</div>
+		<script src='index.js'></script>
+	</body>
+</html>
