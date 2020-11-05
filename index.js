@@ -302,7 +302,9 @@ function run() {
 		return;
 	}
 	let clockSpeed = clockSlider.value;
-	clockNumber.textContent = 'Clock Speed: ' + clockSpeed;
+	// pad end with non-breaking space so that slider doesn't move back and
+	// forth as number of digits changes
+	clockNumber.textContent = 'Clock Speed: ' + String(clockSpeed).padEnd(3, '\xa0');
 	while (performance.now() - time >= 1000 / clockSpeed) {
 		time += 1000 / clockSpeed;
 		const instruction = binaryMap[ram[programCounter.value]];
