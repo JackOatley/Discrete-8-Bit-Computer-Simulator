@@ -1,75 +1,4 @@
-const demos = {
-
-'Addition':
-`LDA 6
-ADD 7
-OUT
-HLT
-4
-7`,
-
-'Subtraction':
-`LDA 6
-SUB 7
-OUT
-HLT
-57
-17`,
-
-'Multiplication':
-`LDA 31
-STA 34
-LDA 32
-STA 33
-LDA 33
-JIZ 27
-LDA 34
-ADD 31
-STA 34
-LDA 33
-SEB 1
-SBR
-STA 33
-JMP 8
-LDA 34
-OUT
-HLT
-5
-10`,
-
-'Counting':
-`ADD 5
-OUT
-JMP 0
-1`,
-
-'Fibonacci 1':
-`LDA 11
-OUT
-ADD 12
-STA 12
-STB 11
-JMP 0
-0
-1`,
-
-'Fibonacci 2':
-`SEA 0
-SEB 1
-OUT
-ADR
-SWP
-JMP 4`,
-
-'Fill RAM':
-`LDA 7
-ADD 10
-STA 7
-STA 11
-JMP 0
-1`
-
-}
+import { demos } from "./demos.js";
 
 //------------------------------------------------------------------------------
 // gui setup
@@ -93,6 +22,10 @@ for (let n=0; n<256; n++)
 //------------------------------------------------------------------------------
 
 const programCounter = {
+	value: 0
+}
+
+const flagRegister = {
 	value: 0
 }
 
@@ -174,7 +107,20 @@ function ADD() {
 	programCounter.value &= 255;
 	memoryAddressRegister.value = op & 255;
 	registerB.value = ram[op] & 255;
+	flagRegister.value = (((registerA.value + registerB.value) >> 8) & 1);
 	registerC.value = (registerA.value + registerB.value) & 0xFF;
+	registerA.value = registerC.value;
+}
+
+function AWC() {
+	FETCH();
+	const op = ram[programCounter.value++] & 255;
+	programCounter.value &= 255;
+	memoryAddressRegister.value = op & 255;
+	registerB.value = ram[op] & 255;
+	const cin = flagRegister.value & 1;
+	flagRegister.value = (((registerA.value + registerB.value + cin) >> 8) & 1);
+	registerC.value = (registerA.value + registerB.value + cin) & 0xFF;
 	registerA.value = registerC.value;
 }
 
@@ -237,7 +183,7 @@ function HLT() {}
 // binary mapping
 //------------------------------------------------------------------------------
 const binaryMap = [
-	NOP, HLT, LDA, SEA, SEB, ADD, SUB, SBR, OUT, STA, STB, JMP, JLT, JIZ, ADR, SWP
+	NOP, HLT, LDA, SEA, SEB, ADD, AWC, SUB, SBR, OUT, STA, STB, JMP, JLT, JIZ, ADR, SWP
 ];
 
 //
@@ -253,6 +199,7 @@ function textToCode() {
 			case 'STA': v = binaryMap.indexOf(STA); break;
 			case 'STB': v = binaryMap.indexOf(STB); break;
 			case 'ADD': v = binaryMap.indexOf(ADD); break;
+			case 'AWC': v = binaryMap.indexOf(AWC); break;
 			case 'SUB': v = binaryMap.indexOf(SUB); break;
 			case 'SBR': v = binaryMap.indexOf(SBR); break;
 			case 'ADR': v = binaryMap.indexOf(ADR); break;
@@ -321,7 +268,7 @@ function toOctalString(v) {
 // GUI buttons
 //------------------------------------------------------------------------------
 
-function runProgram() {
+window.runProgram = function runProgram() {
 	programCounter.value = 0;
 	registerA.value = 0;
 	registerB.value = 0;
@@ -332,16 +279,16 @@ function runProgram() {
 	paused = false;
 }
 
-function resetProgram() {
+window.resetProgram = function resetProgram() {
 	programCounter.value = 0;
 }
 
 let paused = false;
-function togglePause() {
+window.togglePause = function togglePause() {
 	paused ^= true;
 }
 
-function loadExample(name) {
+window.loadExample = function loadExample(name) {
 	codeEditor.value = demos[name];
 }
 
@@ -461,6 +408,7 @@ function draw() {
 	clear();
 
 	drawValue('Program Counter', 60, 50, programCounter.value);
+	drawValue('Flags Register', 60, 130, flagRegister.value);
 
 	drawValue('Register A', 310, 50, registerA.value);
 	drawValue('Register B', 310, 130, registerB.value);
