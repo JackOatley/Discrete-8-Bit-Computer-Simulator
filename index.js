@@ -188,7 +188,9 @@ const binaryMap = [
 
 //
 function textToCode() {
-	const words = codeEditor.value.replaceAll('\n', ' ').split(' ');
+	let commentFree = codeEditor.value.replace(/;.*/g, ""); //remove text from semicolon to end of line
+	let words = commentFree.replaceAll('\n', ' ').split(' ');
+	words = words.filter((word) => word !== ""); //remove blank words (from lines with just a comment)
 	words.forEach((w, i) => {
 		let v = binaryMap.indexOf(NOP);
 		switch (w) {
