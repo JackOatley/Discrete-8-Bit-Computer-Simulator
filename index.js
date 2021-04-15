@@ -188,7 +188,10 @@ const binaryMap = [
 
 //
 function textToCode() {
-	const words = codeEditor.value.replaceAll('\n', ' ').split(' ');
+	let commentFree = codeEditor.value.replace(/;.*/g, ""); //remove text from semicolon to end of line
+	let words = commentFree.replaceAll('\n', ' ').split(' ');
+	words = words.filter((word) => word !== ""); //remove blank words (from lines with just a comment)
+	words = processLabels(words);
 	words.forEach((w, i) => {
 		let v = binaryMap.indexOf(NOP);
 		switch (w) {
@@ -215,6 +218,34 @@ function textToCode() {
 	});
 	disBinary.value = codeToBinary();
 	disOctal.value = codeToOctal();
+}
+
+// Remove the label declarations (ending with a colon) from the words of
+// the program and store the addresses they refer to in a symbol table.
+// Then replace references to these labels with the addresses.
+function processLabels(words) {
+	let symbolTable = {}; //symbol table to hold labels and their addresses
+	let addressCount = 0;
+	let wordsWithoutLabelDeclarations = [];
+	//first pass: find label declarations and add them to symbol table
+	for (let word of words) {
+		if (word.endsWith(":")) { //if word is a label declaration add current address count to symbol table
+			symbolTable[word.slice(0, -1)] = String(addressCount);
+		} else { //othewise increment address counter and add word to new words list
+			addressCount++;
+			wordsWithoutLabelDeclarations.push(word);
+		}
+	}
+	let wordsWithoutLabels = [];
+	//second pass: replace references to labels with their addresses from symbol table
+	for (let word of wordsWithoutLabelDeclarations) {
+		if (word in symbolTable) { //if word is a label in the symbol table
+			wordsWithoutLabels.push(symbolTable[word]); //replace it with address
+		} else { //otherwise just push the word as it is
+			wordsWithoutLabels.push(word);
+		}
+	}
+	return wordsWithoutLabels; //return list of words with labels replaced by addresses
 }
 
 //
